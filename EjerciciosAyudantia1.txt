@@ -22,4 +22,71 @@
 
     }
 
+==============================
+
     Ejercicio 2:
+
+    Pilas: 
+
+    public static String isBalanced(String s) {
+
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : s.toCharArray()) {
+            if (c == '(' || c == '[' || c == '{') {
+                stack.push(c);
+            } else if (c == ')' && !stack.isEmpty() && stack.peek() == '(') {
+                stack.pop();
+            } else if (c == ']' && !stack.isEmpty() && stack.peek() == '[') {
+                stack.pop();
+            } else if (c == '}' && !stack.isEmpty() && stack.peek() == '{') {
+                stack.pop();
+            } else {
+                return "NO";
+            }
+        }
+        
+        return stack.isEmpty() ? "YES" : "NO";
+
+    }
+
+==============================
+
+    Ejercicio 3:
+
+    public static List<Integer> solve(List<Integer> arr, List<Integer> queries) {
+    List<Integer> result = new ArrayList<>();
+
+    for (int i = 0; i < queries.size(); i++) {
+        int k = queries.get(i);
+         List<Integer> v = new ArrayList<>();
+         Deque<Integer> dq = new LinkedList<>();
+
+         for (int j = 0; j < k; j++) {
+            while (!dq.isEmpty() && arr.get(j) > arr.get(dq.peekLast())) {
+                dq.pollLast();
+            }
+            dq.offerLast(j);
+        }
+
+        for (int j = k; j < arr.size(); j++) {
+            v.add(arr.get(dq.peekFirst()));
+
+            while (!dq.isEmpty() && dq.peekFirst() <= j - k) {
+                dq.pollFirst();
+            }
+
+            while (!dq.isEmpty() && arr.get(j) >= arr.get(dq.peekLast())) {
+                dq.pollLast();
+            }
+
+            dq.offerLast(j);
+        }
+
+        v.add(arr.get(dq.peekFirst()));
+        v.sort(null);
+        result.add(v.get(0));
+    }
+
+    return result;
+}
