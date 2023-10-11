@@ -1,0 +1,78 @@
+Ejercicio 1: 
+
+    public static int countStudents(int[] st, int[] sand) {
+
+        Queue<Integer> sandwich = new LinkedList<>();
+        Queue<Integer> student = new LinkedList<>();
+
+        for (int i = 0; i < sand.length; i++) {
+            sandwich.add(sand[i]);
+        }
+
+        for (int i = 0; i < st.length; i++) {
+            student.add(st[i]);
+        }
+
+        // Inicializar un contador para el número de estudiantes que regresan a la fila
+        int count = 0;
+    
+        // Iniciar un bucle mientras haya sándwiches disponibles en la cafetería
+        while (!sandwich.isEmpty()) {
+            // Verificar si se ha excedido el número de estudiantes (evitar bucles infinitos)
+            if (count > st.length) {
+                break;
+            }
+            // Verificar si el sándwich en la parte superior de la pila coincide con la preferencia
+            // del estudiante en la parte frontal de la fila
+            if (sandwich.peek() == student.peek()) {
+                // Si coinciden, el estudiante toma el sándwich y sale de la fila
+                sandwich.remove();
+                student.remove();   
+                // Restablecer el contador a 0, ya que el estudiante pudo tomar un sándwich
+                count = 0;
+            } else {
+                // Si no hay coincidencia, el estudiante regresa al final de la fila
+                student.add(student.remove());
+                // Incrementar el contador para realizar un seguimiento de los estudiantes que
+                // han regresado debido a la falta de coincidencia
+                count++;
+            }
+        }
+        // Devolver el tamaño de la cola student, que representa la cantidad de estudiantes
+        // que no pudieron obtener un almuerzo
+        return student.size();
+    }
+
+=========================================================================
+
+Ejercicio 2: 
+
+public static List<Integer> calcular(List<Integer> pH) {
+
+    List<Integer> resultado = new ArrayList<>();
+    Stack<Integer> stack = new Stack<>();
+
+    for (int i = 0; i < pH.size(); i++) {
+        int alturaActual = pH.get(i);
+
+        // Mientras la pila no esté vacía y la altura actual es mayor o igual a la altura en la cima de la pila,
+        // eliminamos elementos de la pila.
+        while (!stack.isEmpty() && alturaActual >= pH.get(stack.peek())) {
+            stack.pop();
+        }
+
+        if (stack.isEmpty()) {
+            // Si la pila está vacía, significa que el guardia actual ve todas las torres a la izquierda de él.
+            resultado.add(i + 1);
+        } else {
+            // Si la pila no está vacía, el guardia actual ve todas las torres desde la que está en la cima de la pila
+            // hasta la torre anterior a la actual.
+            resultado.add(i - stack.peek());
+        }
+
+        // Agregamos la posición actual a la pila para su posterior procesamiento.
+        stack.push(i);
+    }
+
+    return resultado;
+}
